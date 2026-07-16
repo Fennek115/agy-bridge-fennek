@@ -141,6 +141,28 @@ describe("prompt templates", () => {
     ).toThrow(/chapter/i);
   });
 
+  it("distill_corpus injects optional project rules in both modes", () => {
+    const rule = "Resumen = un párrafo de prosa, PROHIBIDO viñetas";
+    const chapter = get("distill_corpus").buildPrompt(
+      { book_slug: "h", out_dir: "d", session_id: "abc", chapter: 2, rules: rule },
+      "/repo",
+    );
+    const ingest = get("distill_corpus").buildPrompt(
+      { book_slug: "h", out_dir: "d", source: "book.pdf", rules: rule },
+      "/repo",
+    );
+    expect(chapter).toContain(rule);
+    expect(chapter).toMatch(/Reglas duras adicionales/);
+    expect(ingest).toContain(rule);
+    // sin rules no aparece el bloque
+    expect(
+      get("distill_corpus").buildPrompt(
+        { book_slug: "h", out_dir: "d", session_id: "abc", chapter: 2 },
+        "/repo",
+      ),
+    ).not.toMatch(/Reglas duras adicionales/);
+  });
+
   it("follow_up passes the question through verbatim", () => {
     expect(get("follow_up").buildPrompt({ question: "and then?" }, "/repo")).toBe("and then?");
   });

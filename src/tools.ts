@@ -344,6 +344,15 @@ export const TOOLS: ToolDef[] = [
         .array(z.string())
         .optional()
         .describe("Controlled vocabulary (kebab-case) to tag the chapter's front matter."),
+      rules: z
+        .string()
+        .optional()
+        .describe(
+          "Optional project-specific hardening rules appended to the prompt (both modes), " +
+            "e.g. 'Resumen = one prose paragraph, no bullets; sentences <30 words; map the " +
+            "defensive lesson to blue/SOC'. Lets the caller tighten quality without re-pasting " +
+            "the whole template; the generic template stays generic.",
+        ),
       ...commonShape,
     },
     chain: ["Gemini 3.1 Pro (High)", "Gemini 3.5 Flash (High)"],
@@ -352,6 +361,10 @@ export const TOOLS: ToolDef[] = [
       const bookSlug = args.book_slug as string;
       const outDir = args.out_dir as string;
       const sessionId = args.session_id as string | undefined;
+      const extraRules = (args.rules as string | undefined)?.trim();
+      const rulesBlock = extraRules
+        ? `Reglas duras adicionales del proyecto (respétalas al pie):\n${extraRules}\n`
+        : "";
 
       // CHAPTER mode — la sesión ya tiene el libro ingerido.
       if (sessionId) {
@@ -370,6 +383,7 @@ export const TOOLS: ToolDef[] = [
           `ingerido (slug: ${bookSlug}), siguiendo EXACTAMENTE este template:\n\n` +
           `${CHAPTER_TEMPLATE}\n\n` +
           `${topicsLine}\n` +
+          `${rulesBlock}` +
           `Escribe el resultado con tus herramientas en: ${outDir}/cap-${nn}.md\n` +
           `${SECURITY_GUARDRAIL}\n` +
           `Contrato de respuesta: responde AQUÍ SOLO con la confirmación de la ruta escrita — ` +
@@ -386,7 +400,7 @@ export const TOOLS: ToolDef[] = [
         `Ingiere este libro para destilarlo por capítulos: ${source}\n\n` +
         `Escribe con tus herramientas el archivo ${outDir}/00-ficha.md con: autor, edición, ` +
         `tesis central, una síntesis (~200 palabras) y el TOC con los rangos de páginas por ` +
-        `capítulo.\n${SECURITY_GUARDRAIL}\n` +
+        `capítulo.\n${rulesBlock}${SECURITY_GUARDRAIL}\n` +
         `Contrato de respuesta: responde AQUÍ SOLO con (a) la ruta escrita de 00-ficha.md y ` +
         `(b) la lista numerada de capítulos con su título (para pedirlos luego por follow-up con ` +
         `este session_id). NO pegues el contenido de la ficha. ${VOICE}`
