@@ -83,7 +83,7 @@ describe("createToolHandler", () => {
     const res = await handlerFor("delegate", f)({ prompt: "do x" });
     const text = (res.content[0] as { text: string }).text;
     expect(text).toContain("the answer");
-    expect(text).toContain("Gemini 3.5 Flash (High)");
+    expect(text).toContain("Gemini 3.1 Pro (High)");
     expect(text).toContain("sess-1");
     expect(f.runs[0].args).toContain("--model");
   });

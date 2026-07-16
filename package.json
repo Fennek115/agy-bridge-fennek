@@ -1,8 +1,7 @@
 {
-  "name": "agy-bridge",
-  "version": "0.4.1",
-  "description": "MCP bridge that lets Claude Code delegate heavy tasks to the Antigravity CLI (agy) — purpose-built tools, model routing with fallback, and multi-turn session continuity.",
-  "mcpName": "io.github.sshahzaiib/agy-bridge",
+  "name": "agy-bridge-fennek",
+  "version": "0.4.1-fennek.1",
+  "description": "Fine-tuned fork of agy-bridge (by sshahzaiib): MCP bridge that lets Claude Code delegate to the Antigravity CLI (agy), tuned for dust115's domains — Spanish-neutral voice, security (red/blue) framing, essay sparring, and corpus distillation. Runs locally; not published to npm.",
   "type": "module",
   "bin": {
     "agy-bridge": "dist/index.js"
@@ -34,9 +33,12 @@
     "delegation"
   ],
   "author": "Shahzaib (https://github.com/sshahzaiib)",
+  "contributors": [
+    "dust115 / Fennek115 (fork maintainer)"
+  ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sshahzaiib/agy-bridge.git"
+    "url": "git+https://github.com/Fennek115/agy-bridge-fennek.git"
   },
   "license": "MIT",
   "dependencies": {
